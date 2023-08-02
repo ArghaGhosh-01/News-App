@@ -70,37 +70,42 @@
             </div>
             <!-- card ends -->
         </div>
-        
+
         <div class="prevNext">
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                  <li class="page-item"><a id="prev" class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a id="next" class="page-link" href="#">Next</a></li>
+                    <li class="page-item"><a id="prev" class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a id="next" class="page-link" href="#">Next</a></li>
                 </ul>
-              </nav>
+            </nav>
         </div>
 
     </div>
-<script>
-    let articlesperpage; 
-    let totalpages; 
-    let query = window.location.search.split("?")[1].split("&")[0].split("=")[1];
-    let page = parseInt(window.location.search.split("?")[1].split("&")[1].split("=")[1]);
-    console.log(query, page);
+    <script>
+        let articlesperpage;
+        let totalpages;
+        let query = 'sports'; // Default value if query parameter is missing
+        let page = 1; // Default value if page number parameter is missing
 
-    const fetchNews = async (query,pageno) => {
-         let a= await fetch(`https://newsapi.org/v2/everything?q=$ {query}&apiKey=ac46dd1acc1e4bc1bff9f2eab84a73e7`);
-         let r =await a.json();
-        console.log(r);
-        totalpages =Math.ceil(r.totalResults/articlesperpage); 
-        prev.href = `/?q=${query}&pageno=${page-1}`;
-        next.href = `/?q=${query}&pageno=${page+1}`;
-        let str = "";
-        for(let item of r.articles){
-            str = str +`
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('q')) {
+            query = params.get('q');
+        }
+        if (params.has('pageno')) {
+            page = parseInt(params.get('pageno'));
+        }
+        console.log(query, page);
+
+        const fetchNews = async (query, pageno) => {
+            let a = await fetch(`https://newsapi.org/v2/everything?q=$ {query}&apiKey=ac46dd1acc1e4bc1bff9f2eab84a73e7&pageSize=10&page=${pageno}`);
+            let r = await a.json();
+            console.log(r);
+            totalpages = Math.ceil(r.totalResults / articlesperpage);
+            prev.href = `/?q=${query}&pageno=${page - 1}`;
+            next.href = `/?q=${query}&pageno=${page + 1}`;
+            let str = "";
+            for (let item of r.articles) {
+                str = str + `
             <div class="card m-2" style="width: 18rem;">
             <img src="${item.urlToImage}" class="card-img-top" alt="...">
             <div class="card-body">
@@ -110,12 +115,13 @@
             </div>
         </div>
             `;
+            }
+            content.innerHTML = str;
         }
-        content.innerHTML = str;
-    }
-    fetchNews("sports",1);
+        fetchNews("sports", 1);
 
-</script>
+    </script>
 
 </body>
+
 </html>
