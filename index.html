@@ -26,7 +26,7 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="#">Sports</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -47,7 +47,8 @@
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" name="query" type="search" placeholder="Search" aria-label="Search">
+                    <input class="form-control me-2" name="pageno" type="hidden" value="1" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form>
             </div>
@@ -97,7 +98,8 @@
         console.log(query, page);
 
         const fetchNews = async (query, pageno) => {
-            let a = await fetch(`https://newsapi.org/v2/everything?q=$ {query}&apiKey=ac46dd1acc1e4bc1bff9f2eab84a73e7&pageSize=10&page=${pageno}`);
+            let a = await fetch(`https://newsapi.org/v2/everything?q=$ {query}&apiKey=ac46dd1acc1e4bc1bff9f2eab84a73e7&pageSize=12&page=${pageno}&language
+=en`);
             let r = await a.json();
             console.log(r);
             totalpages = Math.ceil(r.totalResults / articlesperpage);
@@ -118,7 +120,7 @@
             }
             content.innerHTML = str;
         }
-        fetchNews("sports", 1);
+        fetchNews("sports", page);
 
     </script>
 
